@@ -1,52 +1,19 @@
-
-import './App.css'
-import { useState, useTransition } from 'react'
-import { Input, List, Flex } from 'antd'
-
-interface Item {
-    id: number,
-    name: string,
-    address: string
-}
+//react没有全局组件和局部组件的概念
+import Card from "./components/Card"
+import Test from "./components/Test"
 function App() {
-    const [list, setList] = useState<Item[]>([])
-    const [inputValue, setinputvalue] = useState('')
-    const [isPending,startTransition]=useTransition()
-    const handleChangeItem = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value
-        setinputvalue(value)
-         fetch(`/api/list?keyWord=${value}`).then(res => res.json()).then(data => {
-         const res = data?.list ?? [];
-         // 使用过渡 useTransition
-         startTransition(() => {
-            setList([...res])
-         })
-        
-      })
-    }
-    return (
-        <>
-            <Flex>
-                <Input placeholder="请输入内容" value={inputValue} onChange={handleChangeItem} />
-            </Flex>
-            {isPending && <div>loading...</div>}
-            <List
-                size="small"
-                header={<div>Header</div>}
-                footer={<div>Footer</div>}
-                bordered
-                dataSource={list}
-                renderItem={(item) => <List.Item><List.Item.Meta
-                    title={item.name}
-                    description={item.address}
-                /></List.Item>}
-            />
-        </>
-    )
+
+  const fn = (params:string) => {
+    console.log('子组件触发了 父组件的事件',params)
+  }
+
+  return (
+    <>
+      <Card></Card>
+      <button onClick={()=>window.onShow()}>确认</button>
+      <Test callback={fn} title={'测试'}></Test>
+    </>
+  )
 }
 
 export default App
-
-
-
-
